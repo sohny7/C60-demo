@@ -1,0 +1,162 @@
+import React from "react";
+import * as SurveyQuestionAnswerOptionsService from "../../../services/SurveyQuestionAnswerOptionsService";
+
+class SurveyQuestionAnswerOptionsForm extends React.Component {
+
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            Id: "",
+            questionId: "",
+            text: "",
+            value: "",
+            userId: "", 
+            additionalInfo:"",
+            editMode:false
+
+        }
+        this.onChange = this.onChange.bind(this);
+        this.submitButton = this.submitButton.bind(this);
+        this.editButton = this.editButton.bind(this);
+ 
+    }
+
+    componentDidMount() {
+    
+        if (this.props.match.params.id) {
+            SurveyQuestionAnswerOptionsService.surveyQuestionAnswerOptionsReadById(this.props.match.params.id)
+                .then(data=> {
+                    let values = data.item
+                    this.setState({
+                        id: values.id,
+                        editMode: true,
+                        questionId: values.questionId,
+                        text: values.text,
+                        value: values.value,
+                        userId: values.userId,
+                        additionalInfo: values.additionalInfo
+                    })
+                })
+        }
+    }
+
+    onChange(e) {
+        this.setState({ [e.target.name]: e.target.value})
+        console.log([e.target.name], e.target.value);
+    }
+
+   
+
+    submitButton() {
+
+        const data = {
+            questionId: this.state.questionId,
+            text: this.state.text,
+            value: this.state.value,
+            userId: this.state.userId,
+            additionalInfo: this.state.additionalInfo
+        }
+
+        SurveyQuestionAnswerOptionsService.surveyQuestionAnswerOptionsPost(data)
+            .then(() => {
+                this.props.history.push('./SurveyQuestionAnswerOptionsList')
+            })
+
+    }
+
+
+
+    editButton() {
+        const data = {
+            id: this.state.id,
+            questionId: this.state.questionId,
+            text: this.state.text,
+            value: this.state.value,
+            userId: this.state.userId,  
+            additionalInfo: this.state.additionalInfo
+        }
+
+        SurveyQuestionAnswerOptionsService.surveyQuestionAnswerOptionsUpdate(data)
+            .then(()=>this.props.history.push('/SurveyQuestionAnswerOptionslist'))
+            .catch(console.log)
+    }
+
+
+    render() {
+        const button = this.state.editMode ? <button type="button" className="btn btn-dark btn-block" onClick={this.editButton}>Edit</button>
+            : <button type="button" className="btn  btn-dark btn-block" onClick={this.submitButton}>Submit</button>
+
+        return (
+            
+            <React.Fragment>
+
+
+
+
+                <header className="content__title" style={{ paddingLeft: "40px" }}>
+                    <h4 className="display-4">Survey Question Answer Options Form</h4>
+                </header>
+
+
+                <div className="card">
+
+                    <div className="mario" role="tablist">
+
+                        <div className="card-body">
+
+                            <div className="container row">
+                           
+                                <div className=" col-md-6">
+
+                                    <div className="form-group">
+                                        <h3 className="card-body__title">Question Id</h3>
+                                        <input type="text" className="form-control form-control-lg" name="questionId" value={this.state.questionId} onChange={this.onChange}/>
+                                        <i className="form-group__bar"></i>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <h3 className="card-body__title">Text</h3>
+                                        <textarea class="form-control" rows="5" name = "text" value={this.state.text} onChange={this.onChange}></textarea>
+                                        <i className="form-group__bar"></i>
+                                    </div>
+
+                                    <div className="form-group ">
+                                        <h3 className="card-body__title">Value - OPTIONAL  </h3>
+                                        <input type="text" className="form-control form-control-lg" name="value" value={this.state.value} onChange={this.onChange} />
+                                        <i className="form-group__bar"></i>
+                                    </div>
+
+                                    <div className="form-group ">
+                                        <h3 className="card-body__title">User Id</h3>
+                                        <input type="text" className="form-control form-control-lg" name="userId" value={this.state.userId} onChange={this.onChange} />
+                                        <i className="form-group__bar"></i>
+                                    </div>
+                             
+                                    <div className="form-group ">
+                                        <h3 className="card-body__title">Additional Info</h3>
+                                        <textarea class="form-control" rows="5" name = "additionalInfo" value={this.state.additionalInfo} onChange={this.onChange}></textarea>
+                                        <i className="form-group__bar"></i>
+                                    </div>
+                                    {button}
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+            </React.Fragment>
+
+        )
+
+    }
+}
+
+export default SurveyQuestionAnswerOptionsForm;
