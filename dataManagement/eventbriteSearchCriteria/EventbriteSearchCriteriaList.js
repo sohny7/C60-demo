@@ -1,0 +1,134 @@
+import React from 'react';
+import * as eventbriteSearchCriteriaService from "../../../services/eventbriteSearchCriteriaService";
+import swal from 'sweetalert2';
+
+class EventbriteSearchCriteriaList extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            Id: "",
+            criteriaId: "",
+            criteriaText: "",
+            typeId: "",
+            listData: []
+        };
+
+        this.onChange = this.onChange.bind(this);
+        this.editButton = this.editButton.bind(this);
+        this.deleteButton = this.deleteButton.bind(this);
+        this.addForm = this.addForm.bind(this);
+        this.getList = this.getList.bind(this);
+    }
+
+    onChange(e) {
+        this.setState({ [e.target.name]: e.target.value });
+        console.log(e.target.value);
+    }
+
+    componentDidMount() {
+
+        eventbriteSearchCriteriaService.GetAllByCriteria()
+            .then(data => {
+                this.setState({
+                    listData: data.items
+                });
+
+            })
+            .catch(console.log)
+    }
+
+    addForm() {
+        this.props.history.push('./edit')
+    }
+
+    editButton(id, e) {
+
+        this.props.history.push('./edit/' + id)
+    }
+    getList() {
+        eventbriteSearchCriteriaService.GetAllByCriteria()
+            .then(data => {
+                this.setState({
+                    listData: data.items
+                })
+            })
+    }
+
+    deleteButton(id, e) {
+        swal({
+            title: "Are you sure you want to delete this seach criteria?",
+            text: "You won't be able to recover this!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "red",
+            cancelButtonColor: '#7ac7f6',
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, keep it!",
+            background: '#0f2940'
+        }).then((result) => {
+            if (result.value) {
+                swal({
+                    title: "Deleted!",
+                    text: "Search criteria has been deleted.",
+                    type: "success",
+                    background: '#0f2940',
+                    confirmButtonColor: '#7ac7f6'
+                })
+                eventbriteSearchCriteriaService.del(id)
+                    .then(this.getList)
+                    .catch(console.error)
+            }
+        })
+    }
+    render() {
+        var mapTheList = this.state.listData.map((item) => {
+            return (
+                <tr key={item.id}>
+                    <td> {item.criteriaId} </td>
+                    <td> {item.criteriaText} </td>
+                    <td> {item.typeTitle} </td>
+                    <td>
+                        <button className="btn btn-light btn--icon" onClick={e => this.editButton(item.id, e)}  ><span><i class="zmdi zmdi-edit zmdi-hc-fw"></i></span></button>
+                        <button className="btn btn-light btn--icon" onClick={e => this.deleteButton(item.id, e)}   ><span><i class="zmdi zmdi-delete zmdi-hc-fw"></i></span></button>
+                    </td>
+                </tr>
+            )
+        })
+
+        return (
+            <React.Fragment>
+                <section>
+                    <header className="content__title" >
+                        <h1>Eventbrite Search Criteria TABLES</h1>
+
+                        <div className="actions">
+                            <a className="actions__item zmdi zmdi-plus-circle" onClick={this.addForm}></a>
+                        </div>
+                    </header>
+
+                    <div className="card">
+                        <div className="card-body">
+                            <table className="table table-inverse">
+                                <thead>
+                                    <tr>
+                                        <th> Criteria Id</th>
+                                        <th> Criteria Text</th>
+                                        <th> Type Id </th>
+                                        <th> Actions </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {mapTheList}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </React.Fragment>
+        )
+    }
+}
+
+export default EventbriteSearchCriteriaList;

@@ -1,0 +1,55 @@
+.drop_style {
+    color: #000;
+}
+.swal2-content {
+    color: #fff !important; 
+    font-weight: bolder !important;
+}
+.review_row {
+    height: 120px;
+}
+.review_row_radiolist {
+    height: 200px;
+}
+.review_col {
+    padding-top: 30px;
+}
+.review_title {
+    padding-bottom: 30px;
+}
+.review_title_tag {
+    margin-bottom: 20px;
+}
+.review_radiolist_ul {
+    padding-top: 30px;
+    padding-inline-start: 0;
+}
+.review_radiolist {
+    display: block;
+    padding-left: 2rem;
+    margin-bottom: 10px;
+}
+.listview_addOn{
+    letter-spacing: .02em;
+    text-align: center;
+    line-height: 1.9em;
+}
+.img_size {
+    height: 5rem;
+    border: solid 2px;
+    margin-left: 33px;
+}
+.listview_content_ {
+    padding-left: 15px; 
+}
+.listview_border {
+    border-top: .5px solid #cbcfd68a;
+    padding: 35px 0px;
+    width: 440px;
+    align-items: baseline !important;
+}
+.caption {
+    font-weight: 700;
+    padding: 13px 0 0 15px;
+    font-size: 13px;
+}
